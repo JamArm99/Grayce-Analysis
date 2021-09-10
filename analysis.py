@@ -28,38 +28,40 @@ for i in range(0,len(data_arr)-1):
 #Analysis 1 - Normalised (non-bias) volume of sales across the year
 months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
-size = 500
-month_vol = []
+month_vol = {}
 
 for month in months:
-    month_vol.append(sum(data_arr[i][1] == month for i in range(0, len(data_arr)-1)))
-
-#explode1 = (0,0,0,0.1,0.1,0,0,0.1,0,0,0,0)
-#fig1, ax1 = plt.subplots()
-#ax1.pie(np.array(month_vol)*100/500, explode=explode1, labels = months, autopct = '%.1f%%', shadow = True)
-#ax1.axis('equal')#Ensure a circle is formed
-#plt.show()
+    month_vol[month] = int(sum(data_arr[i][1] == month for i in range(0, len(data_arr)-1)))*100/500
 
 #Calculate the average monthly volume without sales promotions
-non_sales_months = []
-for month in range(0,len(months)-1):
-    if months[month] == 'Apr' or 'May' or 'Aug':
+no_sale = []
+for key in month_vol.keys():
+    if key == 'Apr' or key == 'May' or key == 'Aug':
         continue
     else:
-        non_sales_months.append(month_vol[month])
-        print(month_vol[month])
-#avg_month = sum(non_sales_months)/len(non_sales_months)
+        no_sale.append(month_vol[key])
 
-#print(non_sales_months)
+avg_no_sale = np.mean(no_sale)
+avg_no_sale_vol = {}
 
-xpos1 = [i for i, _ in enumerate(months)]
+for month in months:
+    avg_no_sale_vol[month] = int(avg_no_sale)
 
+#Plot the analysis
 fig = plt.figure(figsize=(10,8))
-plt.bar(xpos1, np.array(month_vol)*100/500, color='blue')
-#plt.plot(xpos1,avg_month)
+barchart = plt.bar(month_vol.keys(), month_vol.values(), color='blue', edgecolor = 'black', label = 'No promotions months')
+plt.bar(0,0, color = 'g', label = 'Promotion months')#Highlight sales promotion months
+barchart[3].set_facecolor('g') 
+barchart[4].set_facecolor('g')
+barchart[7].set_facecolor('g')
+plt.plot(avg_no_sale_vol.keys(), avg_no_sale_vol.values(), linestyle = '--', color='red', label = 'Average no promotions volume')
 plt.xlabel('Month', fontsize = fnt, fontweight = wht)
 plt.ylabel('Normalised Volume of Sales [%]', fontsize = fnt, fontweight = wht)
-plt.xticks(xpos1, months, fontsize = 12)
+
+handles, labels = plt.gca().get_legend_handles_labels()#Force legend order to be logical
+order = [1,2,0]
+plt.legend([handles[i] for i in order], [labels[i] for i in order], loc = 'best', fontsize = 14)
+
 plt.show()
 
 
