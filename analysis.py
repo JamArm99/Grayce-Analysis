@@ -1,7 +1,5 @@
 #Importing modules
 
-from os import closerange
-import matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
@@ -50,7 +48,7 @@ avg_no_sale = np.mean(no_sale)
 avg_no_sale_vol = {}
 
 for month in months:
-    avg_no_sale_vol[month] = int(avg_no_sale)
+    avg_no_sale_vol[month] = float(avg_no_sale)
 
 #Plot the analysis
 fig1 = plt.figure(figsize=(10,8))
@@ -76,6 +74,20 @@ plt.legend([handles[i] for i in order], [labels[i] for i in order], loc = 'best'
 plt.savefig('monthly_sales_volume.png')#Save figure
 #plt.show()
 plt.close()
+
+#csv output file for difference between averages
+
+delta_vol = {}
+
+for month in months:
+    delta_vol[month] = float(month_vol[month] - avg_no_sale)
+
+with open('delta_vol.csv', 'w') as delta:
+    w = csv.writer(delta, delimiter = ',')
+    w.writerow(['Month', 'Difference from average'])
+    for key in delta_vol:
+        row = [key] + [delta_vol[key]]
+        w.writerow(row)
 
 
 #Analysis 2 - Normalised volume of sales per region. Which regions contribute the most to sales?
@@ -164,4 +176,25 @@ plt.bar(0,0, color = colours[0], label = 'Price')
 plt.bar(0,0, color = colours[8], label = 'Item Volume')
 plt.legend(loc='upper left', fontsize = 16, framealpha = 1, ncol =2)
 plt.savefig('monthly_price_item.png')
-plt.show()
+#plt.show()
+plt.close()
+
+# Analysis 4 - Do loyality customers spend more on average?
+
+#Define lists
+loyal = []
+Nloyal = []
+
+for i in range(0,len(data_arr)):
+    if data_arr[i][5] == 'Null' or data_arr[i][5] == 'NULL':
+        Nloyal.append(float(data_arr[i][2]))
+    else:
+        loyal.append(float(data_arr[i][2]))
+
+loyal_avg = np.mean(loyal)
+Nloyal_avg = np.mean(Nloyal)
+
+loyal_err = np.std(loyal)/np.sqrt(len(loyal))
+Nloyal_err = np.std(Nloyal)/np.sqrt(len(Nloyal))
+
+print(u'The average loyality customer spends £%2.f \u00B1 %1.f, whilst a non-loyality customer spends £%2.f \u00B1 %1.f' % (loyal_avg,loyal_err,Nloyal_avg,Nloyal_err))
