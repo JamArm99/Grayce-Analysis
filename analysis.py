@@ -112,14 +112,14 @@ pie_col = random.sample(colours, len(colours))
 
 #Plot the analysis
 fig2 = plt.figure(figsize=(10,8))
-plt.pie(reg_vol_val.values(), labels=reg_vol_val.keys(), explode = explode, autopct='%.1f%%', shadow=True, startangle=90, radius = 2, labeldistance=1.05, frame=True, colors=pie_col ,
+plt.pie(reg_vol_val.values(), labels=reg_vol_val.keys(), explode = explode, autopct='%.1f%%', shadow=True, startangle=90, radius = 1, labeldistance=1.05, frame=True, colors=pie_col ,
 pctdistance= 0.8 , wedgeprops={'edgecolor': 'black','linewidth': 1}, textprops={'fontsize':12, 'fontweight':wht})
 plt.axis('equal')
 plt.title('2019 Regional Sales Volume', fontsize = 24)
 plt.tick_params(axis = 'both', bottom=False, left=False, labelbottom=False, labelleft = False)
 plt.savefig('regional_sales_volume.png')#Save figure
-#plt.show()
-plt.close()
+plt.show()
+#plt.close()
 
 #Analysis 3 - Average price and volume of items across the year
 
